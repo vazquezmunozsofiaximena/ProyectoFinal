@@ -1,0 +1,88 @@
+<!-- templates/inicio.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="titulo">Las Mejores Botanas!</h1>
+<center><i>A que no te puedes comer solo una</i></center>
+<br>
+
+<p>Como marca líder de botanas en su categoría, Sabritas se enorgullece de
+    satisfacer tus antojos y acompañarte en cada momento a través del disfrute de sus
+    productos. Desde sus clásicos sabores como sal y adobadas, ¡hasta sabores
+    extremos como Habanero, Jalapeño y Flamin' Hot! Disfrútalas en sus distintas
+    presentaciones como tradicionales, Receta Crujiente y las nuevas Sabritas
+    Sensaciones con textura extra crujiente.</p>
+
+<br>
+<hr color="yellow">
+<br>
+
+<h2>Productos Destacados</h2>
+<div class="productos-grid">
+    {% for producto in productos_destacados %}
+    <div class="producto-card">
+        {% if producto.imagen %}
+            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="producto-img">
+        {% else %}
+            <img src="/static/img/producto_default.png" alt="{{ producto.nombre }}" class="producto-img">
+        {% endif %}
+        <h3>{{ producto.nombre }}</h3>
+        <p>{{ producto.marca.nombre }} - {{ producto.peso }}</p>
+        <p class="producto-precio">${{ producto.precio }}</p>
+        <p>Sabor: {{ producto.sabor }}</p>
+        
+        {% if producto.tiene_stock %}
+            {% if user.is_authenticated %}
+                <a href="{% url 'agregar_carrito' producto.id_producto %}">
+                    <button class="btn-agregar">Agregar al Carrito</button>
+                </a>
+            {% else %}
+                <a href="{% url 'cliente_login' %}">
+                    <button class="btn-agregar">Iniciar Sesión para Comprar</button>
+                </a>
+            {% endif %}
+        {% else %}
+            <button class="btn-agregar" disabled>Agotado</button>
+        {% endif %}
+    </div>
+    {% empty %}
+    <p>No hay productos disponibles en este momento.</p>
+    {% endfor %}
+</div>
+
+<br>
+<hr color="yellow">
+<br>
+
+<h2>Nuestras Marcas</h2>
+<div style="display: flex; justify-content: center; gap: 30px; margin: 30px 0;">
+    {% for marca in marcas %}
+    <div style="text-align: center;">
+        {% if marca.logo %}
+            <img src="{{ marca.logo.url }}" alt="{{ marca.nombre }}" style="width: 100px; height: 100px; object-fit: contain;">
+        {% endif %}
+        <h3>{{ marca.nombre }}</h3>
+        <a href="{% url 'productos_marca' marca.id %}">
+            <button class="btn">Ver Productos</button>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+<br>
+<hr color="yellow">
+<br>
+
+<h2>Botanas 100% naturales</h2>
+<p>Sabritas está hecha con ingredientes naturales, aceite, un poco de sal y un cuarto ingrediente, el que no se ve pero se 
+    siente y que le da vida a nuestras botanas: la pasión de nuestra gente.</p>
+<br>
+
+<hr color="yellow">
+<br>
+
+<h2>La sustentabilidad de nuestras botanas</h2>
+<p>Por tres generaciones, nuestros agricultores han cultivado papas y maíz para la 
+    marca Sabritas, quienes tienen el relevo en esta importante tarea agrícola: cultivar más de 100 hectáreas año tras año, 
+    en un ciclo que requiere atenciones y cuidados para obtener cosechas exitosas.</p>
+{% endblock %}

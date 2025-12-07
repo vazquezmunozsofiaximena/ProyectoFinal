@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Categoría - Admin Sabritas{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto; padding: 20px;">
+    <div style="margin-bottom: 30px;">
+        <h1 style="color: #000; font-size: 2rem;">Editar Categoría</h1>
+    </div>
+
+    <div style="background: white; padding: 30px; border-radius: 10px;">
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: bold;">Nombre:</label>
+                <input type="text" name="nombre" value="{{ categoria.nombre }}" required 
+                       style="width: 100%; padding: 12px; border: 1px solid #FFD700; border-radius: 10px;">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: bold;">Descripción:</label>
+                <textarea name="descripcion" rows="4" 
+                          style="width: 100%; padding: 12px; border: 1px solid #FFD700; border-radius: 10px;">{{ categoria.descripcion }}</textarea>
+            </div>
+            
+            <div style="display: flex; gap: 15px; margin-top: 30px;">
+                <button type="submit" 
+                        style="background: #FFD700; color: #000; padding: 12px 30px; border: none; 
+                               border-radius: 20px; cursor: pointer; font-weight: bold;">
+                    Actualizar Categoría
+                </button>
+                <a href="{% url 'categorias_lista' %}" 
+                   style="background: #666; color: white; padding: 12px 30px; border-radius: 20px; 
+                          text-decoration: none; display: inline-block;">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

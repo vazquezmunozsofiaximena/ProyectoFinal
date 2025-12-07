@@ -1,0 +1,51 @@
+<!-- templates/ventas/detalle_simple.html -->
+{% extends 'base.html' %}
+
+{% block title %}Venta #{{ venta.id_venta }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto; padding: 20px;">
+    <h1 style="color: #000;">Venta #{{ venta.id_venta }}</h1>
+    
+    <!-- Información básica -->
+    <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0;">
+        <h3>Información de la Venta</h3>
+        <p><strong>Cliente:</strong> {{ venta.cliente.username }}</p>
+        <p><strong>Fecha:</strong> {{ venta.fecha_venta|date:"d/m/Y H:i" }}</p>
+        <p><strong>Total:</strong> ${{ venta.total|floatformat:2 }}</p>
+        <p><strong>Estado:</strong> {{ venta.get_estado_display }}</p>
+        <p><strong>Método de pago:</strong> {{ venta.metodo_pago }}</p>
+        
+        <h4>Dirección de envío:</h4>
+        <div style="background: #FFEC8B; padding: 10px; border-radius: 5px;">
+            {{ venta.direccion_envio|linebreaks }}
+        </div>
+    </div>
+    
+    <!-- Formulario para cambiar estado -->
+    <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0;">
+        <h3>Cambiar Estado</h3>
+        <form method="post" action="{% url 'ventas_actualizar_estado' venta.id_venta %}">
+            {% csrf_token %}
+            <select name="estado" style="padding: 8px; margin-right: 10px;">
+                {% for key, value in venta.ESTADO_CHOICES %}
+                <option value="{{ key }}" {% if venta.estado == key %}selected{% endif %}>
+                    {{ value }}
+                </option>
+                {% endfor %}
+            </select>
+            <button type="submit" style="background: #28a745; color: white; padding: 8px 15px; border: none; border-radius: 5px;">
+                Actualizar Estado
+            </button>
+        </form>
+    </div>
+    
+    <!-- Botones de acción -->
+    <div style="display: flex; gap: 10px;">
+        <a href="{% url 'ventas_lista' %}" 
+           style="background: #666; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;">
+            ← Volver a Ventas
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,443 @@
+<!-- templates/base.html - LOGO Y SABRITAS JUNTOS -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sabritas - Tienda Oficial</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            color: #000;
+            font-size: 16px;
+        }
+        
+        /* HEADER GRANDE - LOGO Y TEXTO JUNTOS */
+        header {
+            background: yellow;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 4px solid #000;
+        }
+        
+        /* CONTENEDOR PARA LOGO + SABRITAS JUNTOS */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-grow: 1;
+            justify-content: center;
+        }
+        
+        .logo {
+            height: 100px;
+        }
+        
+        .header-text {
+            color: #000;
+            font-size: 3.5rem;
+            font-weight: bold;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+        
+        .logout-btn, .login-btn {
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        
+        .logout-btn:hover, .login-btn:hover {
+            background-color: #CC0000;
+        }
+        
+        .admin-badge {
+            background-color: #000;
+            color: #FFD700;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        /* EL RESTO DEL CSS SE MANTIENE IGUAL */
+        nav {
+            background-color: #FFEC8B;
+            padding: 15px 0;
+            border-bottom: 3px solid #000;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 40px;
+        }
+        
+        nav a {
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+        
+        nav a:hover {
+            background-color: #FFD700;
+        }
+        
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #FFEC8B;
+            min-width: 200px;
+            z-index: 1000;
+            top: 100%;
+            left: 0;
+            border: 2px solid #000;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-content a {
+            color: #000;
+            padding: 12px 16px;
+            display: block;
+            border-bottom: 1px solid #FFD700;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #FFD700;
+        }
+        
+        .content {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: white;
+        }
+        
+        .titulo {
+            color: #000;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.8rem;
+        }
+        
+        .productos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .producto-card {
+            border: 3px solid #FFD700;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            background: white;
+        }
+        
+        .producto-img {
+            max-width: 100%;
+            height: 180px;
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+        
+        .producto-precio {
+            color: #000;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 15px 0;
+            background: #FFD700;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .btn-agregar {
+            background-color: #000;
+            color: #FFD700;
+            border: 2px solid #FFD700;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .btn-agregar:hover {
+            background-color: #FFD700;
+            color: #000;
+        }
+        
+        .btn-agregar:disabled {
+            background-color: #ccc;
+            color: #666;
+            border-color: #999;
+            cursor: not-allowed;
+        }
+        
+        .carrito-count {
+            background-color: #FF0000;
+            color: white;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            margin-left: 8px;
+            border: 2px solid #000;
+        }
+        
+        footer {
+            background-color: #000;
+            color: #FFD700;
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        .messages {
+            max-width: 1200px;
+            margin: 25px auto;
+            padding: 0 20px;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .btn {
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .btn:hover {
+            background-color: #CC0000;
+        }
+        
+        .admin-login-btn {
+            background-color: #000;
+            color: #FFD700;
+        }
+        
+        .admin-login-btn:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER - LOGO Y SABRITAS JUNTOS EN EL CENTRO -->
+    <header>
+        <!-- Botones de usuario a la izquierda -->
+        <div class="user-info">
+            {% if user.is_authenticated %}
+                <img id="userAvatar" src="/static/img/avatar.jpg" alt="Avatar" class="avatar">
+                <span>Hola, {{ user.username }}</span>
+                
+                {% if user.is_staff %}
+                    <span class="admin-badge">ADMIN</span>
+                {% endif %}
+                
+                <a href="{% url 'logout' %}" class="logout-btn">Cerrar Sesión</a>
+            {% else %}
+                <a href="{% url 'cliente_login' %}" class="login-btn">Iniciar Sesión</a>
+                <a href="{% url 'registro' %}" class="login-btn">Registrarse</a>
+                <a href="{% url 'admin_login' %}" class="login-btn admin-login-btn">Admin</a>
+            {% endif %}
+        </div>
+        
+        <!-- Logo y SABRITAS JUNTOS en el centro -->
+        <div class="logo-container">
+            <img src="/static/img/logo.png" alt="Logo Sabritas" class="logo">
+            <h1 class="header-text">SABRITAS</h1>
+        </div>
+        
+        <!-- Espacio vacío a la derecha para balancear -->
+        <div style="width: 200px;"></div>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{% url 'inicio' %}">Inicio</a></li>
+            
+            <!-- Sabritas (ID 1) -->
+            <li class="dropdown">
+                <a href="{% url 'productos_marca' 1 %}">Sabritas ▾</a>
+                <div class="dropdown-content">
+                    {% if categorias_marca_1 %}
+                        {% for categoria in categorias_marca_1 %}
+                        <a href="{% url 'productos_marca_categoria' marca_id=1 categoria_id=categoria.id %}">
+                            {{ categoria.nombre }}
+                        </a>
+                        {% endfor %}
+                    {% else %}
+                        <a href="{% url 'productos_marca' 1 %}">Ver todos</a>
+                    {% endif %}
+                </div>
+            </li>
+            
+            <!-- Doritos (ID 2) -->
+            <li class="dropdown">
+                <a href="{% url 'productos_marca' 2 %}">Doritos ▾</a>
+                <div class="dropdown-content">
+                    {% if categorias_marca_2 %}
+                        {% for categoria in categorias_marca_2 %}
+                        <a href="{% url 'productos_marca_categoria' marca_id=2 categoria_id=categoria.id %}">
+                            {{ categoria.nombre }}
+                        </a>
+                        {% endfor %}
+                    {% else %}
+                        <a href="{% url 'productos_marca' 2 %}">Ver todos</a>
+                    {% endif %}
+                </div>
+            </li>
+            
+            <!-- Cheetos (ID 3) -->
+            <li class="dropdown">
+                <a href="{% url 'productos_marca' 3 %}">Cheetos ▾</a>
+                <div class="dropdown-content">
+                    {% if categorias_marca_3 %}
+                        {% for categoria in categorias_marca_3 %}
+                        <a href="{% url 'productos_marca_categoria' marca_id=3 categoria_id=categoria.id %}">
+                            {{ categoria.nombre }}
+                        </a>
+                        {% endfor %}
+                    {% else %}
+                        <a href="{% url 'productos_marca' 3 %}">Ver todos</a>
+                    {% endif %}
+                </div>
+            </li>
+            
+            <!-- Ruffles (ID 4) -->
+            <li class="dropdown">
+                <a href="{% url 'productos_marca' 4 %}">Ruffles ▾</a>
+                <div class="dropdown-content">
+                    {% if categorias_marca_4 %}
+                        {% for categoria in categorias_marca_4 %}
+                        <a href="{% url 'productos_marca_categoria' marca_id=4 categoria_id=categoria.id %}">
+                            {{ categoria.nombre }}
+                        </a>
+                        {% endfor %}
+                    {% else %}
+                        <a href="{% url 'productos_marca' 4 %}">Ver todos</a>
+                    {% endif %}
+                </div>
+            </li>
+            
+            {% if user.is_staff %}
+            <li class="dropdown">
+                <a href="#">Administrar ▾</a>
+                <div class="dropdown-content">
+                    <a href="{% url 'marcas_lista' %}">Marcas</a>
+                    <a href="{% url 'categorias_lista' %}">Categorías</a>
+                    <a href="{% url 'productos_lista' %}">Productos</a>
+                    <a href="{% url 'clientes_lista' %}">Clientes</a>
+                    <a href="{% url 'ventas_lista' %}">Ventas</a>
+                </div>
+            </li>
+            {% endif %}
+            
+            <li>
+                <a href="{% url 'carrito' %}">
+                    Carrito 
+                    {% if carrito_count > 0 %}
+                        <span class="carrito-count">{{ carrito_count }}</span>
+                    {% endif %}
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <div class="messages">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+    
+    <footer>
+        Sabritas 2025 @SofiaVzMZ - Centro de Bachillerato Tecnológico Industrial y de Servicios No. 128
+        <br>
+        Construye Aplicaciones WEB - Módulo: Desarrollo de Sistemas Web
+    </footer>
+</body>
+</html>

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Categorías - Admin Sabritas{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+    <div style="margin-bottom: 30px;">
+        <h1 style="color: #000; font-size: 2rem;">Categorías</h1>
+        <p style="color: #666;">Administra las categorías de productos</p>
+        <a href="{% url 'categorias_agregar' %}" 
+           style="background: #FF0000; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; display: inline-block; margin-top: 15px;">
+            ➕ Agregar Categoría
+        </a>
+    </div>
+
+    {% if categorias %}
+        <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden;">
+            <thead>
+                <tr style="background: #000; color: #FFD700;">
+                    <th style="padding: 15px; text-align: left;">ID</th>
+                    <th style="padding: 15px; text-align: left;">Nombre</th>
+                    <th style="padding: 15px; text-align: left;">Descripción</th>
+                    <th style="padding: 15px; text-align: left;">Productos</th>
+                    <th style="padding: 15px; text-align: left;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for categoria in categorias %}
+                <tr style="border-bottom: 1px solid #FFEC8B;">
+                    <td style="padding: 15px;">#{{ categoria.id }}</td>
+                    <td style="padding: 15px;">
+                        <strong>{{ categoria.nombre }}</strong>
+                    </td>
+                    <td style="padding: 15px;">
+                        {{ categoria.descripcion|truncatechars:50 }}
+                    </td>
+                    <td style="padding: 15px;">
+                        <span style="background: #28a745; color: white; padding: 5px 10px; border-radius: 15px;">
+                            {{ categoria.productos.count }}
+                        </span>
+                    </td>
+                    <td style="padding: 15px;">
+                        <a href="{% url 'categorias_editar' categoria.id %}" 
+                           style="background: #FFD700; color: #000; padding: 8px 15px; border-radius: 15px; text-decoration: none; margin-right: 10px;">
+                            Editar
+                        </a>
+                        <a href="{% url 'categorias_eliminar' categoria.id %}" 
+                           style="background: #FF0000; color: white; padding: 8px 15px; border-radius: 15px; text-decoration: none;">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div style="margin-top: 30px; display: flex; gap: 20px;">
+            <div style="flex: 1; background: #FFEC8B; padding: 20px; border-radius: 10px; text-align: center;">
+                <h3 style="color: #000;">{{ categorias.count }}</h3>
+                <p>Categorías</p>
+            </div>
+            <div style="flex: 1; background: #FFEC8B; padding: 20px; border-radius: 10px; text-align: center;">
+                <h3 style="color: #000;">
+                    {% with total=0 %}
+                        {% for categoria in categorias %}
+                            {{ total|add:categoria.productos.count }}
+                        {% endfor %}
+                    {% endwith %}
+                </h3>
+                <p>Productos Totales</p>
+            </div>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 50px;">
+            <p style="font-size: 1.2rem; margin-bottom: 20px;">No hay categorías registradas</p>
+            <a href="{% url 'categorias_agregar' %}" 
+               style="background: #FF0000; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;">
+                Agregar primera categoría
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

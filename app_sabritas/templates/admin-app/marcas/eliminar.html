@@ -1,0 +1,39 @@
+<!-- templates/admin/marcas/eliminar.html -->
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Marca - Admin Sabritas{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+    <div style="margin-bottom: 30px;">
+        <h1 style="color: #000; font-size: 2rem;">Eliminar Marca</h1>
+    </div>
+
+    <div style="background: white; padding: 30px; border-radius: 10px; text-align: center;">
+        <div style="margin-bottom: 30px;">
+            <p style="font-size: 1.2rem;">¿Estás seguro que deseas eliminar la marca?</p>
+            <h2 style="color: #FF0000; font-size: 1.5rem;">{{ marca.nombre }}</h2>
+            
+            {% if marca.productos.count > 0 %}
+                <p style="color: #666; margin-top: 20px;">
+                    Esta marca tiene <strong>{{ marca.productos.count }}</strong> productos asociados.
+                </p>
+            {% endif %}
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <button type="submit" 
+                        style="background: #FF0000; color: white; padding: 10px 20px; border: none; border-radius: 20px; cursor: pointer;">
+                    Sí, eliminar
+                </button>
+                <a href="{% url 'marcas_lista' %}" 
+                   style="background: #666; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

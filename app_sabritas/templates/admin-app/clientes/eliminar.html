@@ -1,0 +1,39 @@
+<!-- templates/admin-app/clientes/eliminar.html -->
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Cliente - Admin Sabritas{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+    <div style="margin-bottom: 30px;">
+        <h1 style="color: #000; font-size: 2rem;">Eliminar Cliente</h1>
+    </div>
+
+    <div style="background: white; padding: 30px; border-radius: 10px; text-align: center;">
+        <div style="margin-bottom: 30px;">
+            <p style="font-size: 1.2rem;">¿Estás seguro que deseas eliminar al cliente?</p>
+            <h2 style="color: #FF0000; margin-top: 10px;">{{ usuario.usuario.username }}</h2>
+            
+            <p style="color: #888; font-size: 0.9rem; margin-top: 20px;">
+                Esta acción no se puede deshacer.
+            </p>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <button type="submit" 
+                        style="background: #FF0000; color: white; padding: 10px 25px; border: none; 
+                               border-radius: 20px; cursor: pointer; font-weight: bold;">
+                    Sí, eliminar cliente
+                </button>
+                <a href="{% url 'clientes_lista' %}" 
+                   style="background: #666; color: white; padding: 10px 25px; border-radius: 20px; 
+                          text-decoration: none; display: inline-block;">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

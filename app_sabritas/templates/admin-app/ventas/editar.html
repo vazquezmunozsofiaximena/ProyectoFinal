@@ -1,0 +1,49 @@
+<!-- templates/ventas/editar.html -->
+{% extends 'base.html' %}
+
+{% block title %}Editar Venta #{{ venta.id_venta }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+    <div style="background: white; padding: 30px; border: 2px solid #FFD700; border-radius: 15px;">
+        <h1 style="color: #000; margin-bottom: 20px;">
+            Editar Estado - Venta #{{ venta.id_venta }}
+        </h1>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div style="margin-bottom: 25px;">
+                <label style="display: block; margin-bottom: 10px; font-weight: bold; color: #000;">
+                    Seleccionar nuevo estado:
+                </label>
+                <select name="estado" style="width: 100%; padding: 12px; border: 2px solid #FFD700; border-radius: 10px; font-size: 1rem;">
+                    {% for key, value in estados %}
+                    <option value="{{ key }}" {% if venta.estado == key %}selected{% endif %}>
+                        {{ value }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div style="margin-bottom: 25px; background: #FFEC8B; padding: 15px; border-radius: 10px;">
+                <p style="margin: 0; font-weight: bold;">Estado actual:</p>
+                <p style="margin: 5px 0 0 0; color: #666;">
+                    {{ venta.get_estado_display }}
+                </p>
+            </div>
+            
+            <div style="display: flex; gap: 15px;">
+                <button type="submit" 
+                        style="background: #28a745; color: white; padding: 12px 25px; border-radius: 20px; border: none; cursor: pointer; font-weight: bold; flex: 1;">
+                    ✅ Guardar Cambios
+                </button>
+                <a href="{% url 'ventas_detalle' venta.id_venta %}" 
+                   style="background: #666; color: white; padding: 12px 25px; border-radius: 20px; text-decoration: none; text-align: center; flex: 1;">
+                    ← Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

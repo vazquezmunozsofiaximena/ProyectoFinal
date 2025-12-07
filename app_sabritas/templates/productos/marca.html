@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+    <!-- Encabezado -->
+    <div style="text-align: center; margin-bottom: 40px;">
+        {% if marca.logo %}
+        <img src="{{ marca.logo.url }}" alt="{{ marca.nombre }}" 
+             style="width: 150px; height: 150px; object-fit: contain; margin-bottom: 20px;">
+        {% endif %}
+        <h1 style="color: #000; font-size: 2.5rem; margin-bottom: 10px;">{{ marca.nombre }}</h1>
+        <p style="color: #666; font-size: 1.2rem; margin-bottom: 20px;">{{ marca.descripcion }}</p>
+        <a href="{% url 'inicio' %}" 
+           style="background: #666; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;">
+            ← Volver al inicio
+        </a>
+    </div>
+    
+    <!-- Categorías disponibles -->
+    {% if categorias %}
+    <div style="margin-bottom: 30px; text-align: center;">
+        <h3 style="color: #000; margin-bottom: 15px;">Categorías disponibles:</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+            {% for cat in categorias %}
+            <a href="{% url 'productos_marca_categoria' marca_id=marca.id categoria_id=cat.id %}" 
+               style="background: #FFD700; color: #000; padding: 8px 15px; border-radius: 20px; text-decoration: none;">
+                {{ cat.nombre }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Productos -->
+    <h2 style="color: #000; text-align: center; margin-bottom: 30px;">Productos disponibles ({{ productos.count }})</h2>
+    
+    {% if productos %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px;">
+            {% for producto in productos %}
+            <div style="background: white; border: 2px solid #FFD700; border-radius: 15px; padding: 20px; text-align: center;">
+                {% if producto.imagen %}
+                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" 
+                         style="width: 180px; height: 180px; object-fit: contain; margin-bottom: 15px;">
+                {% endif %}
+                
+                <h3 style="color: #000; margin-bottom: 10px;">{{ producto.nombre }}</h3>
+                <p style="color: #666; margin-bottom: 5px;">
+                    <strong>Sabor:</strong> {{ producto.sabor }}
+                </p>
+                <p style="color: #666; margin-bottom: 5px;">
+                    <strong>Peso:</strong> {{ producto.peso }}
+                </p>
+                <p style="color: #666; margin-bottom: 15px;">
+                    <strong>Categoría:</strong> {{ producto.categoria.nombre }}
+                </p>
+                
+                <p style="font-size: 1.5rem; color: #000; font-weight: bold; margin-bottom: 20px;">
+                    ${{ producto.precio }}
+                </p>
+                
+                {% if user.is_authenticated %}
+                    <a href="{% url 'agregar_carrito' producto.id_producto %}" 
+                       style="background: #000; color: #FFD700; padding: 10px 20px; border-radius: 20px; text-decoration: none; display: inline-block;">
+                        Agregar al carrito
+                    </a>
+                {% else %}
+                    <a href="{% url 'cliente_login' %}" 
+                       style="background: #FF0000; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; display: inline-block;">
+                        Iniciar sesión para comprar
+                    </a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 50px;">
+            <p style="font-size: 1.2rem; color: #666; margin-bottom: 20px;">
+                No hay productos disponibles para {{ marca.nombre }} en este momento.
+            </p>
+            <a href="{% url 'inicio' %}" 
+               style="background: #FF0000; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;">
+                Ver otros productos
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

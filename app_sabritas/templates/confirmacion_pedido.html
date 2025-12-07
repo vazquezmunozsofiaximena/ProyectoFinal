@@ -1,0 +1,86 @@
+<!-- templates/confirmacion_pedido.html -->
+{% extends 'base.html' %}
+
+{% block title %}¡Pedido Confirmado! - Sabritas{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto; padding: 40px 20px;">
+    <div style="background: white; padding: 40px; border: 3px solid #28a745; border-radius: 20px; text-align: center;">
+        
+        <div style="font-size: 6rem; margin-bottom: 20px; color: #28a745;">
+            ✅
+        </div>
+        
+        <h1 style="color: #28a745; margin-bottom: 20px;">
+            ¡Pedido Confirmado!
+        </h1>
+        
+        <!-- ⭐⭐ CAMBIAR venta.id por venta.id_venta ⭐⭐ -->
+        <p style="color: #666; margin-bottom: 30px; font-size: 1.2rem;">
+            Tu pedido <strong>#{{ venta.id_venta|stringformat:"08d" }}</strong><br>
+            ha sido recibido y está <span style="color: #FFD700; font-weight: bold;">EN PROCESO</span>.
+        </p>
+        
+        <div style="background: #FFEC8B; padding: 25px; border-radius: 15px; margin: 30px 0; text-align: left;">
+            <h3 style="color: #000; margin-bottom: 20px;">📦 Detalles del pedido</h3>
+            
+            <p style="margin-bottom: 10px;">
+                <strong>Número de pedido:</strong> 
+                <span style="background: #000; color: #FFD700; padding: 5px 10px; border-radius: 5px;">
+                    #{{ venta.id_venta|stringformat:"08d" }}
+                </span>
+            </p>
+            
+            <!-- ⭐⭐ CAMBIAR venta.fecha por venta.fecha_venta ⭐⭐ -->
+            <p style="margin-bottom: 10px;">
+                <strong>Fecha:</strong> {{ venta.fecha_venta|date:"d/m/Y H:i" }}
+            </p>
+            
+            <p style="margin-bottom: 10px;">
+                <strong>Total pagado:</strong> 
+                <span style="color: #28a745; font-weight: bold;">
+                    ${{ venta.total|floatformat:2 }}
+                </span>
+            </p>
+            
+            <p style="margin-bottom: 10px;">
+                <strong>Método de pago:</strong> {{ venta.metodo_pago }}
+            </p>
+            
+            <p style="margin-bottom: 0;">
+                <strong>Estado:</strong> 
+                <span style="background: #FFD700; color: #000; padding: 5px 15px; border-radius: 20px;">
+                    ⏳ {{ venta.get_estado_display }}
+                </span>
+            </p>
+        </div>
+        
+        <p style="color: #666; margin-bottom: 30px;">
+            Recibirás una confirmación por correo.<br>
+            Tiempo estimado: 24-48 horas.
+        </p>
+        
+        <a href="{% url 'inicio' %}" 
+           style="background: #000; color: #FFD700; padding: 15px 30px; border-radius: 25px; text-decoration: none; font-weight: bold; display: inline-block; margin-top: 20px;">
+            🏠 Continuar comprando
+        </a>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animación simple
+    const title = document.querySelector('h1');
+    title.style.animation = 'fadeIn 1s ease-in';
+    
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    `;
+    document.head.appendChild(style);
+});
+</script>
+{% endblock %}

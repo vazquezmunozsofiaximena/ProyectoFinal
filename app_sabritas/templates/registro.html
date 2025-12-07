@@ -1,0 +1,180 @@
+<!-- templates/registro.html - Versión con 2 columnas -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <h2 class="titulo">Registro de Cliente</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+            <div class="form-group">
+                <label>Nombre *</label>
+                <input type="text" name="nombre" class="form-control" required 
+                       value="{{ form.nombre.value|default:'' }}">
+                {% if form.nombre.errors %}
+                    <div style="color: red; font-size: 0.85em; margin-top: 3px;">
+                        {{ form.nombre.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label>Apellido *</label>
+                <input type="text" name="apellido" class="form-control" required 
+                       value="{{ form.apellido.value|default:'' }}">
+                {% if form.apellido.errors %}
+                    <div style="color: red; font-size: 0.85em; margin-top: 3px;">
+                        {{ form.apellido.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>Email *</label>
+            <input type="email" name="email" class="form-control" required 
+                   value="{{ form.email.value|default:'' }}">
+            {% if form.email.errors %}
+                <div style="color: red; font-size: 0.9em; margin-top: 5px;">
+                    {{ form.email.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label>Teléfono</label>
+            <input type="tel" name="telefono" class="form-control" 
+                   placeholder="Ej: 555-123-4567"
+                   value="{{ form.telefono.value|default:'' }}">
+        </div>
+        
+        <div class="form-group">
+            <label>Nombre de usuario *</label>
+            <input type="text" name="username" class="form-control" required 
+                   value="{{ form.username.value|default:'' }}">
+            {% if form.username.errors %}
+                <div style="color: red; font-size: 0.9em; margin-top: 5px;">
+                    {{ form.username.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+            <div class="form-group">
+                <label>Contraseña *</label>
+                <input type="password" name="password1" class="form-control" required>
+                {% if form.password1.errors %}
+                    <div style="color: red; font-size: 0.85em; margin-top: 3px;">
+                        {{ form.password1.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label>Confirmar contraseña *</label>
+                <input type="password" name="password2" class="form-control" required>
+                {% if form.password2.errors %}
+                    <div style="color: red; font-size: 0.85em; margin-top: 3px;">
+                        {{ form.password2.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% if form.non_field_errors %}
+            <div style="color: red; background-color: #ffe6e6; padding: 10px; 
+                       border-radius: 5px; margin: 15px 0; border-left: 4px solid #dc3545;">
+                {% for error in form.non_field_errors %}
+                    <p style="margin: 0; font-size: 0.9em;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <div style="margin: 20px 0;">
+            <button type="submit" class="btn" style="width: 100%; padding: 12px;">
+                <strong>Crear Cuenta</strong>
+            </button>
+        </div>
+    </form>
+    
+    <div style="text-align: center; padding: 20px; background-color: #f8f9fa; 
+                border-radius: 5px; margin-top: 20px;">
+        <p style="margin-bottom: 10px;">
+            ¿Ya tienes cuenta? 
+            <a href="{% url 'cliente_login' %}" style="font-weight: 500;">Inicia sesión</a>
+        </p>
+    </div>
+</div>
+
+<style>
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: #333;
+        font-size: 0.95em;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        box-sizing: border-box;
+        transition: all 0.2s;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0,123,255,.1);
+    }
+    
+    .btn {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.2s;
+    }
+    
+    .btn:hover {
+        background-color: #218838;
+    }
+    
+    .titulo {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #333;
+        font-size: 24px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #007bff;
+    }
+    
+    a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    
+    a:hover {
+        text-decoration: underline;
+    }
+    
+    @media (max-width: 600px) {
+        div[style*="grid-template-columns"] {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+
+{% endblock %}

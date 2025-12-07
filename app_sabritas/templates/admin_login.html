@@ -1,0 +1,154 @@
+<!-- templates/admin_login.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login Administrador - Sabritas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .logo-admin {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo-admin img {
+            height: 80px;
+        }
+        
+        h2 {
+            color: #FF0000;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .btn:hover {
+            background-color: #CC0000;
+        }
+        
+        .messages {
+            margin-bottom: 20px;
+        }
+        
+        .alert {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .back-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-admin">
+            <img src="/static/img/logo.png" alt="Sabritas">
+            <h1>SABRITAS</h1>
+            <p>Panel de Administración</p>
+        </div>
+        
+        <div class="messages">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        <h2>Acceso Administrativo</h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label>Usuario Administrador:</label>
+                <input type="text" name="username" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Contraseña:</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+            
+            <button type="submit" class="btn">Acceder al Panel</button>
+        </form>
+        
+        <div class="back-link">
+            <a href="{% url 'inicio' %}">← Volver al sitio principal</a>
+        </div>
+        
+        <div class="back-link">
+            <a href="{% url 'cliente_login' %}">¿Eres cliente? Inicia sesión aquí</a>
+        </div>
+    </div>
+</body>
+</html>

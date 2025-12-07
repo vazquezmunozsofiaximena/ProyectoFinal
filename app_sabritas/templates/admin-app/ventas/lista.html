@@ -1,0 +1,164 @@
+<!-- templates/ventas/lista.html - Versión corregida -->
+{% extends 'base.html' %}
+
+{% block title %}Ventas - Admin Sabritas{% endblock %}
+
+{% block content %}
+<div style="max-width: 1400px; margin: 0 auto; padding: 20px;">
+    <!-- Cabecera -->
+    <div style="margin-bottom: 30px;">
+        <h1 style="color: #000; font-size: 2rem;">Ventas</h1>
+        <p style="color: #666;">Administra todas las ventas del sistema</p>
+        
+        <!-- Filtros -->
+    </div>
+
+    <!-- Tabla de ventas (SECCIÓN CORREGIDA) -->
+    {% if ventas %}
+        <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden;">
+            <thead>
+                <tr style="background: #000; color: #FFD700;">
+                    <th style="padding: 15px; text-align: left;">ID Venta</th>
+                    <th style="padding: 15px; text-align: left;">Cliente</th>
+                    <th style="padding: 15px; text-align: left;">Fecha</th>
+                    <th style="padding: 15px; text-align: left;">Total</th>
+                    <th style="padding: 15px; text-align: left;">Estado</th>
+                    <th style="padding: 15px; text-align: left;">Método Pago</th>
+                    <th style="padding: 15px; text-align: center;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for venta in ventas %}
+                <tr style="border-bottom: 1px solid #FFEC8B;">
+                    <!-- ID Venta -->
+                    <td style="padding: 15px;">
+                        <strong>#{{ venta.id_venta|stringformat:"06d" }}</strong>
+                    </td>
+                    
+                    <!-- Cliente -->
+                    <td style="padding: 15px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 40px; height: 40px; background: #FFD700; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: bold;">
+                                {{ venta.cliente.username|slice:"0:1"|upper }}
+                            </div>
+                            <div>
+                                <strong>{{ venta.cliente.username }}</strong><br>
+                                <small style="color: #666;">{{ venta.cliente.email|truncatechars:20 }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    
+                    <!-- Fecha -->
+                    <td style="padding: 15px;">
+                        {{ venta.fecha_venta|date:"d/m/Y" }}<br>
+                        <small style="color: #666;">{{ venta.fecha_venta|date:"H:i" }}</small>
+                    </td>
+                    
+                    <!-- Total -->
+                    <td style="padding: 15px;">
+                        <div>
+                            <strong style="color: #28a745;">${{ venta.total|floatformat:2 }}</strong><br>
+                            <small style="color: #666;">
+                                Sub: ${{ venta.subtotal|floatformat:2 }}<br>
+                                IVA: ${{ venta.iva|floatformat:2 }}
+                            </small>
+                        </div>
+                    </td>
+                    
+                    <!-- Estado -->
+                    <td style="padding: 15px;">
+                        {% if venta.estado == 'pendiente' %}
+                            <span style="background: #ffc107; color: #000; padding: 6px 12px; border-radius: 20px; display: inline-block; font-weight: bold;">
+                                ⏳ {{ venta.get_estado_display }}
+                            </span>
+                        {% elif venta.estado == 'confirmado' %}
+                            <span style="background: #17a2b8; color: white; padding: 6px 12px; border-radius: 20px; display: inline-block; font-weight: bold;">
+                                ✓ {{ venta.get_estado_display }}
+                            </span>
+                        {% elif venta.estado == 'enviado' %}
+                            <span style="background: #007bff; color: white; padding: 6px 12px; border-radius: 20px; display: inline-block; font-weight: bold;">
+                                🚚 {{ venta.get_estado_display }}
+                            </span>
+                        {% elif venta.estado == 'entregado' %}
+                            <span style="background: #28a745; color: white; padding: 6px 12px; border-radius: 20px; display: inline-block; font-weight: bold;">
+                                ✅ {{ venta.get_estado_display }}
+                            </span>
+                        {% elif venta.estado == 'cancelado' %}
+                            <span style="background: #dc3545; color: white; padding: 6px 12px; border-radius: 20px; display: inline-block; font-weight: bold;">
+                                ❌ {{ venta.get_estado_display }}
+                            </span>
+                        {% endif %}
+                    </td>
+                    
+                    <!-- Método de pago -->
+                    <td style="padding: 15px;">
+                        <span style="background: #FFEC8B; color: #000; padding: 5px 10px; border-radius: 15px;">
+                            {% if venta.metodo_pago == 'Tarjeta de crédito' %}
+                                💳 {{ venta.metodo_pago }}
+                            {% elif venta.metodo_pago == 'PayPal' %}
+                                🔵 {{ venta.metodo_pago }}
+                            {% elif venta.metodo_pago == 'Efectivo' %}
+                                💵 {{ venta.metodo_pago }}
+                            {% else %}
+                                {{ venta.metodo_pago }}
+                            {% endif %}
+                        </span>
+                    </td>
+                    
+                    <!-- ⭐⭐ ACCIONES CORREGIDAS ⭐⭐ -->
+                    <td style="padding: 15px; text-align: center;">
+                        <div style="display: flex; gap: 5px; justify-content: center;">
+                            <!-- Ver detalle - CORREGIDO: 'ventas_detalle' con 's' -->
+                            <a href="{% url 'ventas_detalle' venta.id_venta %}" 
+                               style="background: #007bff; color: white; padding: 6px 12px; border-radius: 15px; text-decoration: none; font-size: 0.9rem;"
+                               title="Ver detalle">
+                                👁️
+                            </a>
+                            
+                            <!-- Actualizar estado - CORREGIDO: 'ventas_actualizar_estado' -->
+                            <a href="{% url 'ventas_actualizar_estado' venta.id_venta %}" 
+                               style="background: #FFD700; color: #000; padding: 6px 12px; border-radius: 15px; text-decoration: none; font-size: 0.9rem;"
+                               title="Actualizar estado">
+                                ✏️
+                            </a>
+                            
+                            <!-- Cancelar (deshabilitado temporalmente) -->
+                            {% if venta.estado != 'cancelado' and venta.estado != 'entregado' %}
+                            <button onclick="if(confirm('¿Cancelar venta #{{ venta.id_venta }}?')) { 
+                                        fetch('{% url 'ventas_actualizar_estado' venta.id_venta %}', {
+                                            method: 'POST',
+                                            headers: {
+                                                'X-CSRFToken': '{{ csrf_token }}',
+                                                'Content-Type': 'application/x-www-form-urlencoded',
+                                            },
+                                            body: 'estado=cancelado'
+                                        }).then(response => {
+                                            if(response.ok) {
+                                                location.reload();
+                                            }
+                                        });
+                                    }"
+                                    style="background: #dc3545; color: white; padding: 6px 12px; border-radius: 15px; border: none; cursor: pointer; font-size: 0.9rem;"
+                                    title="Cancelar venta">
+                                ❌
+                            </button>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+    {% else %}
+        <!-- Sin ventas -->
+        <div style="text-align: center; padding: 50px; background: white; border-radius: 10px;">
+            <div style="font-size: 4rem; margin-bottom: 20px; color: #FFD700;">
+                🛒
+            </div>
+            <h3 style="color: #000; margin-bottom: 10px;">No hay ventas registradas</h3>
+            <p style="color: #666; margin-bottom: 20px;">Aún no se han realizado ventas en el sistema</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

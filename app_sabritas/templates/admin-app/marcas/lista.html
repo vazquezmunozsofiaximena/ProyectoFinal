@@ -1,0 +1,95 @@
+<!-- templates/admin/marcas/lista.html -->
+{% extends 'base.html' %}
+
+{% block title %}Marcas - Admin Sabritas{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+    <!-- Encabezado simple -->
+    <div style="margin-bottom: 30px;">
+        <h1 style="color: #000; font-size: 2rem;">Marcas</h1>
+        <p style="color: #666;">Administra las marcas de productos</p>
+        <a href="{% url 'marcas_agregar' %}" 
+           style="background: #FF0000; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; display: inline-block; margin-top: 15px;">
+            ➕ Agregar Marca
+        </a>
+    </div>
+
+    {% if marcas %}
+        <!-- Tabla simple -->
+        <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden;">
+            <thead>
+                <tr style="background: #000; color: #FFD700;">
+                    <th style="padding: 15px; text-align: left;">ID</th>
+                    <th style="padding: 15px; text-align: left;">Logo</th>
+                    <th style="padding: 15px; text-align: left;">Nombre</th>
+                    <th style="padding: 15px; text-align: left;">Productos</th>
+                    <th style="padding: 15px; text-align: left;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for marca in marcas %}
+                <tr style="border-bottom: 1px solid #FFEC8B;">
+                    <td style="padding: 15px;">#{{ marca.id }}</td>
+                    <td style="padding: 15px;">
+                        {% if marca.logo %}
+                            <img src="{{ marca.logo.url }}" 
+                                 style="width: 60px; height: 60px; object-fit: contain;">
+                        {% else %}
+                            <div style="width: 60px; height: 60px; background: #FFEC8B; display: flex; align-items: center; justify-content: center;">
+                                Sin logo
+                            </div>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 15px;">
+                        <strong>{{ marca.nombre }}</strong>
+                    </td>
+                    <td style="padding: 15px;">
+                        <span style="background: #28a745; color: white; padding: 5px 10px; border-radius: 15px;">
+                            {{ marca.productos.count }}
+                        </span>
+                    </td>
+                    <td style="padding: 15px;">
+                        <a href="{% url 'marcas_editar' marca.id %}" 
+                           style="background: #FFD700; color: #000; padding: 8px 15px; border-radius: 15px; text-decoration: none; margin-right: 10px;">
+                            Editar
+                        </a>
+                        <a href="{% url 'marcas_eliminar' marca.id %}" 
+                           style="background: #FF0000; color: white; padding: 8px 15px; border-radius: 15px; text-decoration: none;">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <!-- Contador simple -->
+        <div style="margin-top: 30px; display: flex; gap: 20px;">
+            <div style="flex: 1; background: #FFEC8B; padding: 20px; border-radius: 10px; text-align: center;">
+                <h3 style="color: #000;">{{ marcas.count }}</h3>
+                <p>Marcas</p>
+            </div>
+            <div style="flex: 1; background: #FFEC8B; padding: 20px; border-radius: 10px; text-align: center;">
+                <h3 style="color: #000;">
+                    {% with total=0 %}
+                        {% for marca in marcas %}
+                            {{ total|add:marca.productos.count }}
+                        {% endfor %}
+                    {% endwith %}
+                </h3>
+                <p>Productos</p>
+            </div>
+        </div>
+    {% else %}
+        <!-- Mensaje simple -->
+        <div style="text-align: center; padding: 50px;">
+            <p style="font-size: 1.2rem; margin-bottom: 20px;">No hay marcas registradas</p>
+            <a href="{% url 'marcas_agregar' %}" 
+               style="background: #FF0000; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;">
+                Agregar primera marca
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

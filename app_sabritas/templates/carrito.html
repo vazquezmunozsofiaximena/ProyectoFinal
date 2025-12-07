@@ -1,0 +1,195 @@
+<!-- templates/carrito.html -->
+{% extends 'base.html' %}
+
+{% block title %}Carrito de Compras - Sabritas{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+    <h1 style="color: #000; font-size: 2.5rem; margin-bottom: 10px; text-align: center;">
+        🛒 Tu Carrito
+    </h1>
+    
+    {% if items.count > 0 %}
+        <!-- Resumen -->
+        <div style="background: #FFEC8B; padding: 20px; border-radius: 15px; margin-bottom: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 style="color: #000;">Tienes {{ items.count }} productos en el carrito</h3>
+                    <p style="color: #666;">Total de items: {{ items_count }}</p>
+                </div>
+                <div>
+                    <a href="{% url 'inicio' %}" 
+                       style="background: #666; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; margin-right: 10px;">
+                        ← Seguir comprando
+                    </a>
+                    <a href="{% url 'vaciar_carrito' %}" 
+                       style="background: #FF0000; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;"
+                       onclick="return confirm('¿Vaciar todo el carrito?')">
+                        🗑️ Vaciar carrito
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tabla de productos -->
+        <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden;">
+            <thead>
+                <tr style="background: #000; color: #FFD700;">
+                    <th style="padding: 15px; text-align: left;">Producto</th>
+                    <th style="padding: 15px; text-align: center;">Precio Unitario</th>
+                    <th style="padding: 15px; text-align: center;">Cantidad</th>
+                    <th style="padding: 15px; text-align: center;">Subtotal</th>
+                    <th style="padding: 15px; text-align: center;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr style="border-bottom: 1px solid #FFEC8B;">
+                    <td style="padding: 15px;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            {% if item.producto.imagen %}
+                            <img src="{{ item.producto.imagen.url }}" 
+                                 style="width: 80px; height: 80px; object-fit: contain; border-radius: 8px;">
+                            {% else %}
+                            <div style="width: 80px; height: 80px; background: #FFEC8B; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                                🖼️
+                            </div>
+                            {% endif %}
+                            <div>
+                                <h4 style="color: #000; margin-bottom: 5px;">{{ item.producto.nombre }}</h4>
+                                <p style="color: #666; margin: 0;">
+                                    {{ item.producto.marca.nombre }} - {{ item.producto.sabor }}
+                                </p>
+                                <p style="color: #666; margin: 0;">
+                                    {{ item.producto.peso }}
+                                </p>
+                                {% if item.producto.stock < item.cantidad %}
+                                <p style="color: #FF0000; margin: 5px 0; font-weight: bold;">
+                                    ⚠️ Solo hay {{ item.producto.stock }} disponibles
+                                </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+                    <td style="padding: 15px; text-align: center;">
+                        <strong>${{ item.producto.precio }}</strong>
+                    </td>
+                    <td style="padding: 15px; text-align: center;">
+                        <div style="display: flex; gap: 5px; align-items: center;">
+                            <form method="POST" action="{% url 'actualizar_carrito' item.id %}" 
+                                style="display: flex; gap: 5px; align-items: center;">
+                                {% csrf_token %}
+                                
+                                <!-- Botón - -->
+                                <button type="button" 
+                                        onclick="cambiarCantidad(this, -1)"
+                                        style="background: #FF0000; color: white; border: none; width: 30px; height: 30px; border-radius: 5px 0 0 5px; cursor: pointer; font-weight: bold;"
+                                        {% if item.cantidad <= 1 %}disabled{% endif %}>
+                                    -
+                                </button>
+                                
+                                <!-- Input cantidad -->
+                                <input type="number" 
+                                    name="cantidad" 
+                                    value="{{ item.cantidad }}" 
+                                    min="1" 
+                                    max="{{ item.producto.stock }}"
+                                    style="width: 70px; padding: 8px 5px; border: 2px solid #FFD700; text-align: center;">
+                                
+                                <!-- Botón + -->
+                                <button type="button" 
+                                        onclick="cambiarCantidad(this, 1)"
+                                        style="background: #28a745; color: white; border: none; width: 30px; height: 30px; border-radius: 0 5px 5px 0; cursor: pointer; font-weight: bold;"
+                                        {% if item.cantidad >= item.producto.stock %}disabled{% endif %}>
+                                    +
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                    <td style="padding: 15px; text-align: center;">
+                        <strong style="color: #000;">${{ item.subtotal }}</strong>
+                    </td>
+                    <td style="padding: 15px; text-align: center;">
+                        <a href="{% url 'eliminar_carrito' item.id %}" 
+                           style="background: #FF0000; color: white; padding: 8px 15px; border-radius: 15px; text-decoration: none;"
+                           onclick="return confirm('¿Eliminar {{ item.producto.nombre }} del carrito?')">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <!-- Resumen de compra -->
+        <div style="margin-top: 40px; display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+            
+            <div style="background: white; padding: 25px; border: 2px solid #FFD700; border-radius: 15px;">
+                <h3 style="color: #000; margin-bottom: 20px; border-bottom: 2px solid #FFD700; padding-bottom: 10px;">
+                    Resumen del pedido
+                </h3>
+                
+                <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
+                    <span>Subtotal:</span>
+                    <strong>${{ subtotal }}</strong>
+                </div>
+                
+                <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
+                    <span>IVA 16%:</span>
+                    <strong>${{ iva|floatformat:2 }}</strong>
+                </div>
+                
+                <div style="margin: 20px 0; border-top: 2px solid #FFD700; padding-top: 15px; display: flex; justify-content: space-between; font-size: 1.2rem;">
+                    <strong>Total:</strong>
+                    <strong style="color: #28a745;">${{ total|floatformat:2 }}</strong>
+                </div>
+                
+                <div style="margin-top: 25px;">
+                    <a href="{% url 'checkout' %}" 
+                       style="background: #28a745; color: white; padding: 15px; border-radius: 25px; text-decoration: none; display: block; text-align: center; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px;">
+                        💳 Proceder al pago
+                    </a>
+                    
+                    <p style="text-align: center; color: #666; font-size: 0.9rem; margin-top: 10px;">
+                        Pago seguro • Envío en 24-48 horas
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+    {% else %}
+        <!-- Carrito vacío -->
+        <div style="text-align: center; padding: 60px 20px;">
+            <div style="font-size: 5rem; margin-bottom: 20px;">🛒</div>
+            <h2 style="color: #000; margin-bottom: 20px;">Tu carrito está vacío</h2>
+            <p style="color: #666; margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto;">
+                Parece que aún no has agregado productos a tu carrito. 
+                ¡Descubre nuestras deliciosas botanas!
+            </p>
+            <a href="{% url 'inicio' %}" 
+               style="background: #FF0000; color: white; padding: 15px 30px; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 1.1rem;">
+                Comenzar a comprar
+            </a>
+        </div>
+    {% endif %}
+</div>
+<script>
+function cambiarCantidad(button, cambio) {
+    const form = button.closest('form');
+    const input = form.querySelector('input[name="cantidad"]');
+    let nuevaCantidad = parseInt(input.value) + cambio;
+    
+    // Validar límites
+    const min = parseInt(input.min);
+    const max = parseInt(input.max);
+    
+    if (nuevaCantidad < min) nuevaCantidad = min;
+    if (nuevaCantidad > max) nuevaCantidad = max;
+    
+    input.value = nuevaCantidad;
+    
+    // Enviar automáticamente
+    form.submit();
+}
+</script>
+{% endblock %}

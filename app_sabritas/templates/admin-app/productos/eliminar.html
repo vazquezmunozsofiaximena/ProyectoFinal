@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Producto - Admin Sabritas{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+    <div style="margin-bottom: 30px;">
+        <h1 style="color: #000; font-size: 2rem;">Eliminar Producto</h1>
+    </div>
+
+    <div style="background: white; padding: 30px; border-radius: 10px; text-align: center;">
+        <div style="margin-bottom: 30px;">
+            <p style="font-size: 1.2rem;">¿Estás seguro que deseas eliminar este producto?</p>
+            
+            <div style="background: #FFEC8B; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                {% if producto.imagen %}
+                <img src="{{ producto.imagen.url }}" 
+                     style="width: 100px; height: 100px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
+                {% endif %}
+                
+                <h2 style="color: #FF0000; font-size: 1.5rem; margin-bottom: 10px;">
+                    {{ producto.nombre }}
+                </h2>
+                <p style="color: #666; margin: 5px 0;">
+                    <strong>Marca:</strong> {{ producto.marca.nombre }}
+                </p>
+                <p style="color: #666; margin: 5px 0;">
+                    <strong>Precio:</strong> ${{ producto.precio }}
+                </p>
+                <p style="color: #666; margin: 5px 0;">
+                    <strong>Stock:</strong> {{ producto.stock }} unidades
+                </p>
+            </div>
+            
+            <p style="color: #888; font-size: 0.9rem; margin-top: 20px;">
+                Esta acción no se puede deshacer y el producto será eliminado permanentemente.
+            </p>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <button type="submit" 
+                        style="background: #FF0000; color: white; padding: 10px 25px; border: none; 
+                               border-radius: 20px; cursor: pointer; font-weight: bold;">
+                    Sí, eliminar producto
+                </button>
+                <a href="{% url 'productos_lista' %}" 
+                   style="background: #666; color: white; padding: 10px 25px; border-radius: 20px; 
+                          text-decoration: none; display: inline-block;">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
